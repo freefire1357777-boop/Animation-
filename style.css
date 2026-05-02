@@ -1,0 +1,539 @@
+/* =========================================
+   VARIABLES & SETUP
+========================================= */
+:root {
+    --primary: #925ef8;
+    --secondary: #480192;
+    --bg-white: #fdfdfd;
+    --text-dark: #0a0118;
+    --font-main: 'Outfit', sans-serif;
+    --ease-cinematic: cubic-bezier(0.25, 1, 0.25, 1);
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    font-family: var(--font-main);
+    background-color: var(--bg-white);
+    color: var(--text-dark);
+    transition: background-color 2s var(--ease-cinematic);
+}
+
+body.cinematic-mode {
+    background-color: var(--text-dark);
+    color: white;
+}
+
+/* =========================================
+   CUSTOM CURSOR
+========================================= */
+#cursor {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    transition: width 0.2s, height 0.2s;
+}
+
+#cursor-glow {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(146, 94, 248, 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9998;
+    transition: top 0.1s, left 0.1s, width 0.2s, height 0.2s, background 0.2s;
+}
+
+body:hover #cursor-glow.hovering {
+    width: 60px;
+    height: 60px;
+    background: rgba(146, 94, 248, 0.1);
+    border-color: var(--primary);
+}
+
+/* =========================================
+   BACKGROUND EFFECTS (LUXURY WHITE)
+========================================= */
+.bg-grid {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: 
+        linear-gradient(rgba(146, 94, 248, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(146, 94, 248, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: 0;
+    perspective: 1000px;
+    transform-origin: center top;
+    animation: gridMove 20s linear infinite;
+    opacity: 1;
+    transition: opacity 2s ease;
+}
+
+body.cinematic-mode .bg-grid {
+    background-image: 
+        linear-gradient(rgba(146, 94, 248, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(146, 94, 248, 0.15) 1px, transparent 1px);
+    animation: gridMoveFast 5s linear infinite;
+    opacity: 0.3;
+}
+
+@keyframes gridMove {
+    0% { transform: translateY(0) rotateX(45deg); }
+    100% { transform: translateY(50px) rotateX(45deg); }
+}
+
+@keyframes gridMoveFast {
+    0% { transform: translateY(0) rotateX(60deg) scale(1.5); }
+    100% { transform: translateY(100px) rotateX(60deg) scale(1.5); }
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    opacity: 0.4;
+    transition: all 3s ease;
+}
+
+.blob-1 {
+    top: -10%; left: -10%;
+    width: 50vw; height: 50vw;
+    background: radial-gradient(circle, var(--primary), transparent 70%);
+    animation: float 15s ease-in-out infinite;
+}
+
+.blob-2 {
+    bottom: -20%; right: -10%;
+    width: 60vw; height: 60vw;
+    background: radial-gradient(circle, var(--secondary), transparent 70%);
+    animation: float 20s ease-in-out infinite reverse;
+}
+
+body.cinematic-mode .blob {
+    opacity: 0.8;
+    filter: blur(120px);
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(5%, 5%) scale(1.1); }
+}
+
+/* =========================================
+   PARTICLES
+========================================= */
+#particles-container {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    background: var(--primary);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--primary);
+    opacity: 0;
+    animation: rise var(--duration) linear infinite;
+}
+
+body.cinematic-mode .particle {
+    background: #fff;
+    box-shadow: 0 0 15px #fff;
+    animation: hyperspace var(--duration) cubic-bezier(0.5, 0, 1, 0.5) infinite;
+}
+
+@keyframes rise {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    50% { opacity: 0.6; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+@keyframes hyperspace {
+    0% { transform: translateZ(-1000px) scale(0); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateZ(500px) scale(3); opacity: 0; }
+}
+
+/* =========================================
+   HERO SECTION
+========================================= */
+#hero-section {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: transform 3s var(--ease-cinematic), opacity 2s;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.hero-logo {
+    width: 300px;
+    max-width: 80vw;
+    filter: drop-shadow(0 10px 20px rgba(146, 94, 248, 0.15));
+    animation: fadeDown 1.5s var(--ease-bounce) forwards;
+}
+
+.logo-fallback {
+    font-size: 4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tagline {
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    font-weight: 700;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #1a0b2e, var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 1s 0.5s var(--ease-cinematic) forwards;
+}
+
+body.cinematic-mode .tagline {
+    background: linear-gradient(135deg, #fff, #d4c1ff);
+    -webkit-background-clip: text;
+}
+
+.subtitle {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    color: #666;
+    font-weight: 300;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 1s 0.7s var(--ease-cinematic) forwards;
+}
+
+@keyframes fadeDown {
+    0% { opacity: 0; transform: translateY(-40px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   LAUNCH BUTTON
+========================================= */
+.button-wrapper {
+    margin-top: 3rem;
+    opacity: 0;
+    animation: fadeUp 1s 1s var(--ease-cinematic) forwards;
+    position: relative;
+}
+
+#launch-btn {
+    position: relative;
+    padding: 1.2rem 3.5rem;
+    font-size: 1.2rem;
+    font-family: var(--font-main);
+    font-weight: 600;
+    color: var(--primary);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(146, 94, 248, 0.3);
+    border-radius: 50px;
+    cursor: none; /* using custom cursor */
+    overflow: hidden;
+    transition: all 0.4s var(--ease-bounce);
+    box-shadow: 0 10px 30px rgba(146, 94, 248, 0.1);
+}
+
+#launch-btn .btn-text {
+    position: relative;
+    z-index: 2;
+    transition: color 0.3s ease;
+}
+
+#launch-btn .btn-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    z-index: 1;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s var(--ease-cinematic);
+}
+
+#launch-btn:hover {
+    border-color: var(--primary);
+    box-shadow: 0 15px 40px rgba(146, 94, 248, 0.4);
+    transform: translateY(-5px) scale(1.02);
+}
+
+#launch-btn:hover .btn-bg {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+#launch-btn:hover .btn-text {
+    color: #fff;
+}
+
+.btn-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 150%; height: 150%;
+    background: radial-gradient(circle, rgba(255,255,255,0.8), transparent 60%);
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 3;
+    pointer-events: none;
+}
+
+.ripple-effect {
+    animation: ripple 0.8s ease-out forwards;
+}
+
+@keyframes ripple {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+
+/* =========================================
+   CINEMATIC SEQUENCE STYLES
+========================================= */
+#cinematic-container {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 50;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body.shake-effect {
+    animation: subtleShake 0.1s infinite alternate;
+}
+
+@keyframes subtleShake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    100% { transform: translate(-1px, -2px) rotate(-0.5deg); }
+}
+
+/* Step 1: Initializing Text */
+.cinematic-text {
+    position: absolute;
+    font-size: 1.5rem;
+    letter-spacing: 5px;
+    color: var(--primary);
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 1s ease;
+    text-shadow: 0 0 20px rgba(146, 94, 248, 0.8);
+}
+
+.cinematic-text.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Step 2: Energy Core */
+.energy-core-container {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.energy-core-container.active {
+    display: flex;
+}
+
+.energy-core {
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 50px 20px var(--primary), 0 0 100px 40px var(--secondary);
+    animation: pulseCore 2s infinite alternate, scaleUpCore 2.5s forwards var(--ease-cinematic);
+}
+
+.ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-origin: center;
+    opacity: 0;
+    animation: fadeInRing 1s forwards;
+}
+
+.ring-1 { animation: fadeInRing 1s forwards, spin 4s linear infinite; }
+.ring-2 { animation: fadeInRing 1s 0.2s forwards, spin 3s linear infinite reverse; width: 150%; height: 150%;}
+.ring-3 { animation: fadeInRing 1s 0.4s forwards, spin 2s linear infinite; width: 250%; height: 250%; }
+
+@keyframes pulseCore {
+    0% { filter: brightness(1); }
+    100% { filter: brightness(1.5); }
+}
+
+@keyframes scaleUpCore {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.5); opacity: 1; }
+    90% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(100); opacity: 0; } /* Explosion */
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeInRing {
+    to { opacity: 1; }
+}
+
+/* Step 4: Text Sequence */
+#text-sequence-container {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+}
+
+#sequence-word {
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #fff, var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0;
+    transform: scale(0.8);
+    text-shadow: 0 0 50px rgba(146, 94, 248, 0.4);
+}
+
+.word-animate {
+    animation: popWord 0.8s var(--ease-cinematic) forwards;
+}
+
+@keyframes popWord {
+    0% { opacity: 0; transform: scale(0.5) translateZ(-100px); filter: blur(20px); }
+    30% { opacity: 1; transform: scale(1.1) translateZ(0); filter: blur(0); }
+    80% { opacity: 1; transform: scale(1) translateZ(0); filter: blur(0); }
+    100% { opacity: 0; transform: scale(1.5) translateZ(100px); filter: blur(20px); }
+}
+
+/* Step 5: Final Reveal */
+#final-reveal {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+}
+
+#final-reveal.active {
+    display: flex;
+}
+
+.massive-logo {
+    width: 400px;
+    max-width: 90vw;
+    opacity: 0;
+    transform: scale(0.8);
+    filter: drop-shadow(0 0 30px var(--primary));
+    animation: finalLogoReveal 2s var(--ease-cinematic) forwards;
+}
+
+.final-subtitle {
+    margin-top: 2rem;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    color: #fff;
+    font-weight: 300;
+    letter-spacing: 2px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: finalSubtitleReveal 2s 1s var(--ease-cinematic) forwards;
+}
+
+.light-burst {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 200px 100px #fff, 0 0 400px 200px var(--primary);
+    animation: lightBurstAnim 2s forwards;
+    z-index: -1;
+}
+
+@keyframes finalLogoReveal {
+    0% { opacity: 0; transform: scale(0.5) translateY(50px); filter: brightness(3) blur(10px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); filter: brightness(1) blur(0); }
+}
+
+@keyframes finalSubtitleReveal {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes lightBurstAnim {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(20); opacity: 0; }
+}
+
+/* Final Portal Transition */
+#portal-overlay {
+    position: fixed;
+    top: 50%; left: 50%;
+    width: 100vw; height: 100vh;
+    background: #fff;
+    transform: translate(-50%, -50%);
+    clip-path: circle(0% at center);
+    z-index: 100;
+    pointer-events: none;
+}
+
+.portal-open {
+    animation: openPortal 1.5s var(--ease-cinematic) forwards;
+}
+
+@keyframes openPortal {
+    0% { clip-path: circle(0% at center); background: var(--primary); }
+    50% { background: #fff; }
+    100% { clip-path: circle(150% at center); background: #fff; }
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+@media (max-width: 768px) {
+    #cursor, #cursor-glow { display: none; } /* Disable custom cursor on mobile */
+    #launch-btn { padding: 1rem 2.5rem; cursor: pointer; }
+    .bg-grid { background-size: 30px 30px; }
+}

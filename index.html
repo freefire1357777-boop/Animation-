@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduGuru Launch Event</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="cursor"></div>
+    <div id="cursor-glow"></div>
+
+    <div class="bg-grid"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div id="particles-container"></div>
+
+    <main id="hero-section">
+        <div class="hero-content">
+            <img src="eduguru.png" alt="EduGuru Logo" class="hero-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <h1 class="logo-fallback" style="display: none;">EDUGURU</h1>
+            
+            <h2 class="tagline">The Future of Smart Learning</h2>
+            <p class="subtitle">Experience the next generation of education</p>
+            
+            <div class="button-wrapper">
+                <button id="launch-btn">
+                    <span class="btn-bg"></span>
+                    <span class="btn-text">Launch EduGuru</span>
+                    <div class="btn-glow"></div>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div id="cinematic-container">
+        <div class="cinematic-text" id="status-text">Initializing EduGuru...</div>
+        
+        <div class="energy-core-container" id="energy-core-container">
+            <div class="energy-core"></div>
+            <svg class="ring ring-1" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="48" fill="none" stroke="url(#purple-grad)" stroke-width="1" stroke-dasharray="10 5" />
+            </svg>
+            <svg class="ring ring-2" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="url(#purple-grad)" stroke-width="2" stroke-dasharray="20 10 5 10" />
+            </svg>
+            <svg class="ring ring-3" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="30" fill="none" stroke="#925ef8" stroke-width="0.5" stroke-dasharray="4 4" />
+            </svg>
+            
+            <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
+              <linearGradient id="purple-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#925ef8" />
+                <stop offset="100%" stop-color="#480192" />
+              </linearGradient>
+            </svg>
+        </div>
+
+        <div id="text-sequence-container">
+            <h1 id="sequence-word"></h1>
+        </div>
+
+        <div id="final-reveal">
+            <div class="light-burst"></div>
+            <img src="eduguru.png" alt="EduGuru Logo" class="massive-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <h1 class="logo-fallback final" style="display: none;">EDUGURU</h1>
+            <h3 class="final-subtitle">Welcome to the Future of Learning</h3>
+        </div>
+        
+        <div id="portal-overlay"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
