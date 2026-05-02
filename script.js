@@ -1,4 +1,21 @@
 // =========================================
+// 🎵 AUDIO SETUP
+// =========================================
+const sfxHover = new Audio('hover.mp3');
+const sfxClick = new Audio('click.mp3');
+const sfxBuildup = new Audio('buildup.mp3');
+const sfxExplosion = new Audio('explosion.mp3');
+const sfxWhoosh = new Audio('whoosh.mp3');
+const sfxReveal = new Audio('choir.mp3');
+
+// Set volume levels for optimal cinematic balance
+sfxHover.volume = 0.2;
+sfxBuildup.volume = 0.6;
+sfxWhoosh.volume = 0.5;
+sfxExplosion.volume = 0.7;
+sfxReveal.volume = 0.8;
+
+// =========================================
 // CUSTOM CURSOR & PARALLAX LOGIC
 // =========================================
 const cursor = document.getElementById('cursor');
@@ -7,7 +24,7 @@ const launchBtn = document.getElementById('launch-btn');
 const heroSection = document.getElementById('hero-section');
 const blobs = document.querySelectorAll('.blob');
 
-// Update cursor position
+// Update cursor position and parallax background
 document.addEventListener('mousemove', (e) => {
     const { clientX: x, clientY: y } = e;
     
@@ -31,9 +48,16 @@ document.addEventListener('mousemove', (e) => {
     });
 });
 
-// Magnetic & Hover effect on button
-launchBtn.addEventListener('mousemove', (e) => {
+// Magnetic & Hover effect on button with Sound Effect
+launchBtn.addEventListener('mouseenter', () => {
     cursorGlow.classList.add('hovering');
+    
+    // Play hover sound
+    sfxHover.currentTime = 0; 
+    sfxHover.play();
+});
+
+launchBtn.addEventListener('mousemove', (e) => {
     const rect = launchBtn.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
@@ -80,11 +104,15 @@ createParticles();
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 launchBtn.addEventListener('click', async function(e) {
-    // 0. Disable interactions & Button Ripple
+    // 0. Disable interactions & Play Click Sound
     document.body.style.pointerEvents = 'none';
     const btnGlow = this.querySelector('.btn-glow');
     btnGlow.classList.add('ripple-effect');
     
+    // 🎵 Trigger sound sequence
+    sfxClick.play();
+    setTimeout(() => sfxBuildup.play(), 500);
+
     // 1. Cinematic Activation
     document.body.classList.add('cinematic-mode');
     document.body.classList.add('shake-effect');
@@ -104,14 +132,17 @@ launchBtn.addEventListener('click', async function(e) {
     await sleep(2000);
     statusText.classList.remove('show');
     
-    // 2. Energy Core
+    // 2. Energy Core Sequence
     await sleep(500);
     const energyCoreContainer = document.getElementById('energy-core-container');
     energyCoreContainer.classList.add('active');
     
-    // Wait for core to pulse and explode (animation takes ~2.5s)
+    // Wait for core to pulse and explode
     await sleep(2400);
     energyCoreContainer.style.display = 'none';
+    
+    // 🎵 Play the explosion sound as core transitions away
+    sfxExplosion.play();
     
     // 3 & 4. Text Sequence
     const words = ["Education", "Innovation", "Technology", "Future", "Begins Now"];
@@ -120,10 +151,15 @@ launchBtn.addEventListener('click', async function(e) {
     for (let word of words) {
         sequenceContainer.innerText = word;
         sequenceContainer.classList.remove('word-animate');
-        // Trigger reflow to restart animation
+        // Trigger reflow to restart the word-animation
         void sequenceContainer.offsetWidth; 
         sequenceContainer.classList.add('word-animate');
-        await sleep(800); // Wait for word animation to almost finish
+        
+        // 🎵 Play Whoosh sound effect for every word
+        sfxWhoosh.currentTime = 0;
+        sfxWhoosh.play();
+        
+        await sleep(800);
     }
     
     sequenceContainer.style.display = 'none';
@@ -133,19 +169,22 @@ launchBtn.addEventListener('click', async function(e) {
     const finalReveal = document.getElementById('final-reveal');
     finalReveal.classList.add('active');
     
+    // 🎵 Play the final premium choir/reveal chord
+    sfxReveal.play();
+
     // Add subtle camera shake for impact
     document.body.classList.add('shake-effect');
     setTimeout(() => document.body.classList.remove('shake-effect'), 200);
 
-    // Let the user admire the final logo
+    // Let the user admire the final reveal
     await sleep(3500);
 
     // 6. Portal Transition & Redirect
     const portal = document.getElementById('portal-overlay');
     portal.classList.add('portal-open');
     
-    await sleep(1500); // Wait for portal to fill screen
+    await sleep(1500); // Wait for portal animation to complete
     
-    // Redirect to actual site
+    // Redirect to final destination
     window.location.href = 'https://eduguru.lk';
 });
